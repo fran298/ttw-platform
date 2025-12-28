@@ -1,0 +1,7 @@
+{
+  "name": "TTW - Global Adventure Marketplace",
+  "description": "The ultimate platform for booking extreme sports, equipment rentals, and international trips. Features AI-powered itineraries and comprehensive provider dashboards.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}

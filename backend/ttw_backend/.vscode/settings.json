@@ -1,0 +1,12 @@
+{
+    "python.defaultInterpreterPath": "/Users/francomaran/.pyenv/versions/3.11.5/bin/python",
+    "python.analysis.extraPaths": [
+        "./",
+        "./apps",
+        "./apps/geo",
+        "./apps/listings",
+        "./apps/providers",
+        "./apps/users"
+    ],
+    "python.analysis.typeCheckingMode": "off"
+}
