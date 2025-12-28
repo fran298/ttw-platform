@@ -28,58 +28,66 @@ const SportLanding: React.FC = () => {
   const [cityFilter, setCityFilter] = useState<string>('');
   const [dateFilter, setDateFilter] = useState<string>('');
 
-  useEffect(() => {
-    const fetch = async () => {
-      if (sportSlug) {
-        setLoading(true);
-        const sportData = await getSportLandingDetails(sportSlug);
-        setData(sportData);
-        
-        // 1. Fetch Providers (Schools & Instructors)
-        const directory = await getInstructorsDirectory();
-        // Filter globally by this Sport (tolerant: slug OR name OR object)
-        const sportSchools = directory.schools.filter(s =>
-          Array.isArray(s.sports) && s.sports.some((sp: any) => {
-            const slug = typeof sp === 'string' ? sp.toLowerCase() : sp?.slug?.toLowerCase();
-            const name = typeof sp === 'string' ? sp.toLowerCase() : sp?.name?.toLowerCase();
-            return slug === sportSlug.toLowerCase() || name === sportSlug.toLowerCase();
-          })
-        );
+useEffect(() => {
+  const fetchData = async () => {
+    if (!sportSlug) return;
 
-        const sportFreelancers = directory.freelancers.filter(f =>
-          Array.isArray(f.sports) && f.sports.some((sp: any) => {
-            const slug = typeof sp === 'string' ? sp.toLowerCase() : sp?.slug?.toLowerCase();
-            const name = typeof sp === 'string' ? sp.toLowerCase() : sp?.name?.toLowerCase();
-            return slug === sportSlug.toLowerCase() || name === sportSlug.toLowerCase();
-          })
-        );
-        
-        setProviders({ schools: sportSchools, freelancers: sportFreelancers });
+    console.log("⏳ Fetching Sport Landing:", sportSlug);
+    setLoading(true);
 
-        // 2. Fetch specific listings for this sport
-        const sportListings = await getListings({ sport: sportSlug });
+    try {
+      const sportData = await getSportLandingDetails(sportSlug);
+      console.log("✅ Sport landing details OK");
+      setData(sportData);
 
-        // Defensive: backend/DTO can vary, but in our FE model Listing.sport is a string slug
-        const currentSport = sportSlug.toLowerCase();
+      // 1. Fetch Providers (Schools & Instructors)
+      const directory = await getInstructorsDirectory();
+      console.log("✅ Instructors directory OK");
 
-        const strictlyFilteredListings = sportListings.filter(l => {
-          const listingSportSlug = l.sport?.toLowerCase?.() ?? '';
-          const listingSportName = (l as any).sportName?.toLowerCase?.() ?? ''; // sportName exists in our mapped DTO
-          return listingSportSlug === currentSport || listingSportName === currentSport;
-        });
+      const sportSchools = directory.schools.filter(s =>
+        Array.isArray(s.sports) && s.sports.some((sp: any) => {
+          const slug = typeof sp === 'string' ? sp.toLowerCase() : sp?.slug?.toLowerCase();
+          const name = typeof sp === 'string' ? sp.toLowerCase() : sp?.name?.toLowerCase();
+          return slug === sportSlug.toLowerCase() || name === sportSlug.toLowerCase();
+        })
+      );
 
-        // Deduplicate by id (avoids duplicate renders/refetches)
-        const uniqueListings = Array.from(
-          new Map(strictlyFilteredListings.map(l => [l.id, l])).values()
-        );
+      const sportFreelancers = directory.freelancers.filter(f =>
+        Array.isArray(f.sports) && f.sports.some((sp: any) => {
+          const slug = typeof sp === 'string' ? sp.toLowerCase() : sp?.slug?.toLowerCase();
+          const name = typeof sp === 'string' ? sp.toLowerCase() : sp?.name?.toLowerCase();
+          return slug === sportSlug.toLowerCase() || name === sportSlug.toLowerCase();
+        })
+      );
 
-        setListings(uniqueListings);
+      setProviders({ schools: sportSchools, freelancers: sportFreelancers });
 
-        setLoading(false);
-      }
-    };
-    fetch();
-  }, [sportSlug]);
+      // 2. Fetch specific listings for this sport
+      const sportListings = await getListings({ sport: sportSlug });
+      console.log("✅ Listings OK");
+
+      const currentSport = sportSlug.toLowerCase();
+
+      const strictlyFilteredListings = sportListings.filter(l => {
+        const listingSportSlug = l.sport?.toLowerCase?.() ?? '';
+        const listingSportName = (l as any).sportName?.toLowerCase?.() ?? '';
+        return listingSportSlug === currentSport || listingSportName === currentSport;
+      });
+
+      const uniqueListings = Array.from(
+        new Map(strictlyFilteredListings.map(l => [l.id, l])).values()
+      );
+
+      setListings(uniqueListings);
+    } catch (error) {
+      console.error("❌ Error loading SportLanding:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchData();
+}, [sportSlug]);
 
   // --- FILTER LOGIC ---
 
