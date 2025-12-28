@@ -42,6 +42,9 @@ const ScrollToTop = () => {
 };
 
 const App: React.FC = () => {
+  useEffect(() => {
+    console.log("VITE_API_BASE_URL =", import.meta.env.VITE_API_BASE_URL);
+  }, []);
   const [userRole, setUserRole] = useState<'USER' | 'PROVIDER' | 'ADMIN' | null>(null);
 
   // Auth State Listener
