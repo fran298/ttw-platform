@@ -15,3 +15,7 @@ frontend/dist/
 
 # OS
 .DS_Store
+
+# Virtualenv
+venv/
+backend/ttw_backend/venv/
