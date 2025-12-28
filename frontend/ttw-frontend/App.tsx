@@ -137,7 +137,6 @@ const App: React.FC = () => {
           <Route path="/activity/:id" element={<Detail />} />
           <Route path="/rent/:id" element={<Detail />} />
           <Route path="/trip/:id" element={<Detail />} />
-          <Route path="/:type/:id" element={<Detail />} />
 
           <Route path="/provider/:providerId" element={<ProviderProfilePage />} />
           <Route path="/manage-listing/:action" element={<ManageListing />} />
