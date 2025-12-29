@@ -25,6 +25,4 @@ class City(models.Model):
         ]
 
     def __str__(self):
-        if self.country_id:
-            return f"{self.name}, {self.country.code}"
         return self.name
