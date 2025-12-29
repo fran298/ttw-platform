@@ -103,10 +103,10 @@ const Navbar: React.FC<NavbarProps> = () => {
                     </>
                 ) : (
                     <>
-                        <Link to="/signup" className="px-5 py-2.5 text-sm font-bold text-[#132b5b] border-2 border-[#132b5b]/10 rounded-full hover:border-[#132b5b] hover:bg-[#132b5b]/5 transition-all">
+                        <Link to="/signup" className="px-5 py-2.5 text-sm font-bold text-[#5B98A7] border-2 border-[#5B98A7]/10 rounded-full hover:border-[#132b5b] hover:bg-[#132b5b]/5 transition-all">
                             Sign up
                         </Link>
-                        <Link to="/login" className="px-5 py-2.5 text-sm font-bold text-white bg-[#132b5b] rounded-full hover:bg-[#0f234b] transition-all shadow-lg shadow-blue-900/10">
+                        <Link to="/login" className="px-5 py-2.5 text-sm font-bold text-white bg-[#5B98A7] rounded-full hover:bg-[#0f234b] transition-all shadow-lg shadow-blue-900/10">
                             Login
                         </Link>
                     </>

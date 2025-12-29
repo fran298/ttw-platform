@@ -41,7 +41,7 @@ const Home: React.FC = () => {
     <div className="flex flex-col w-full font-sans">
       
       {/* HERO SECTION */}
-      <section className="relative w-full h-[600px] md:h-[520px] flex items-center justify-center mb-24"> 
+      <section className="relative w-full h-[420px] sm:h-[460px] md:h-[520px] flex items-center justify-center mb-24"> 
         {/* Background Image */}
         <div className="absolute inset-0 z-0 overflow-hidden">
             <img 
@@ -64,21 +64,40 @@ const Home: React.FC = () => {
 
         {/* Search Bar */}
         <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 w-full max-w-3xl px-4 z-20">
-            <div className="bg-white rounded-full shadow-2xl p-2 flex flex-col md:flex-row items-center border border-gray-100">
-                <div className="relative flex-1 w-full md:w-auto px-6 py-2 md:border-r border-gray-100 cursor-pointer hover:bg-gray-50 rounded-t-3xl md:rounded-l-full md:rounded-tr-none transition-colors group">
-                    <label className="block text-[10px] md:text-xs font-black text-gray-900 uppercase tracking-wider mb-0.5">Where?</label>
-                    <input type="text" placeholder="Anywhere" className="w-full bg-transparent border-none p-0 text-gray-500 font-medium focus:ring-0 placeholder-gray-400 text-sm md:text-base" />
-                </div>
-                <div className="relative flex-1 w-full md:w-auto px-6 py-2 cursor-pointer hover:bg-gray-50 rounded-b-3xl md:rounded-r-full md:rounded-bl-none transition-colors group">
-                    <label className="block text-[10px] md:text-xs font-black text-gray-900 uppercase tracking-wider mb-0.5">When?</label>
-                    <input type="text" placeholder="Whenever" className="w-full bg-transparent border-none p-0 text-gray-500 font-medium focus:ring-0 placeholder-gray-400 text-sm md:text-base" />
-                </div>
-                <div className="p-1 w-full md:w-auto flex justify-center">
-                    <button className="w-12 h-12 bg-[#132b5b] hover:bg-[#0f234b] text-white rounded-full font-bold transition-all shadow-lg flex items-center justify-center group transform hover:scale-105 hover:shadow-brand-900/20">
-                        <Search className="w-5 h-5" />
-                    </button>
-                </div>
+          <div className="bg-white rounded-full shadow-2xl p-1 md:p-2 flex flex-row items-center border border-gray-100">
+            
+            {/* WHERE */}
+            <div className="relative flex-1 px-4 md:px-6 py-1.5 md:py-2 border-r border-gray-100 cursor-pointer hover:bg-gray-50 rounded-l-full transition-colors">
+              <label className="block text-[9px] md:text-xs font-black text-gray-900 uppercase tracking-wider mb-0.5">
+                Where?
+              </label>
+              <input
+                type="text"
+                placeholder="Anywhere"
+                className="w-full bg-transparent border-none p-0 text-gray-500 font-medium focus:ring-0 placeholder-gray-400 text-xs md:text-base"
+              />
             </div>
+
+            {/* WHEN */}
+            <div className="relative flex-1 px-4 md:px-6 py-1.5 md:py-2 cursor-pointer hover:bg-gray-50 transition-colors">
+              <label className="block text-[9px] md:text-xs font-black text-gray-900 uppercase tracking-wider mb-0.5">
+                When?
+              </label>
+              <input
+                type="text"
+                placeholder="Whenever"
+                className="w-full bg-transparent border-none p-0 text-gray-500 font-medium focus:ring-0 placeholder-gray-400 text-xs md:text-base"
+              />
+            </div>
+
+            {/* SEARCH BUTTON */}
+            <div className="pl-1 pr-1 md:pr-2 flex items-center">
+              <button className="w-9 h-9 md:w-12 md:h-12 bg-[#5B98A7] hover:bg-[#0f234b] text-white rounded-full transition-all shadow-lg flex items-center justify-center transform hover:scale-105">
+                <Search className="w-4 h-4 md:w-5 md:h-5" />
+              </button>
+            </div>
+
+          </div>
         </div>
       </section>
 

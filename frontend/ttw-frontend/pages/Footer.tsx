@@ -19,7 +19,7 @@ const Footer: React.FC = () => {
   };
 
   return (
-    <footer className="bg-[#132b5b] text-white py-16 px-4 font-sans">
+    <footer className="bg-[#253445] text-white py-16 px-4 font-sans">
       <div className="max-w-6xl mx-auto">
         
         {/* Newsletter Section */}
@@ -42,15 +42,15 @@ const Footer: React.FC = () => {
         </div>
 
         {/* Inner Card (Recuadro Azul) */}
-        <div className="bg-[#519EAD] rounded-[45px] p-10 md:p-16 shadow-2xl">
+        <div className="bg-[#334454] rounded-[45px] p-10 md:p-16 shadow-2xl">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-12 lg:gap-16">
             
             {/* Left Column: Logo & Socials */}
             <div className="md:col-span-5 flex flex-col items-start">
               <img 
-                src="https://res.cloudinary.com/dmvlubzor/image/upload/v1763998121/The-Travel-Wild-_Logo-fondo-transparente_tvxme0.png" 
+                src="https://res.cloudinary.com/dmvlubzor/image/upload/v1767026047/Logo-Blanco-_fondo-transparente_bppjax_10d8dd.png" 
                 alt="The Travel Wild"
-                className="w-52 h-auto mb-8"
+                className="w-60 h-auto mb-8"
               />
               <h3 className="text-3xl font-bold leading-[1.1] mb-10">
                 Wild trips,<br />meaningful connections
