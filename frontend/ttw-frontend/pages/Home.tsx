@@ -41,7 +41,7 @@ const Home: React.FC = () => {
     <div className="flex flex-col w-full font-sans">
       
       {/* HERO SECTION */}
-      <section className="relative w-full h-[450px] md:h-[380px] flex items-center justify-center mb-24"> 
+      <section className="relative w-full h-[600px] md:h-[520px] flex items-center justify-center mb-24"> 
         {/* Background Image */}
         <div className="absolute inset-0 z-0 overflow-hidden">
             <img 
@@ -83,7 +83,7 @@ const Home: React.FC = () => {
       </section>
 
       {/* SPORTS GRID SECTION */}
-      <section className="py-10 pt-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+      <section className="py-10 pt-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div className="text-center mb-10">
             <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900">What extreme sport are you looking for?</h2>
         </div>
@@ -210,8 +210,19 @@ const Home: React.FC = () => {
 
       {/* WHO WE ARE */}
       <section className="relative w-auto">
-        <div className="hidden md:block absolute inset-0 w-full h-[400px] lg:h-[450px]">
-          <img src="https://res.cloudinary.com/dmvlubzor/image/upload/v1763801588/WhoWeAre_o1uijj.jpg" alt="Who We Are Background" className="w-full h-full object-cover md:object-[-3rem] lg:object-center" />
+        <div className="hidden md:flex absolute inset-0 w-full h-[400px] lg:h-[450px] items-center justify-center bg-gray-100">
+          {/* Image wrapper */}
+          <div className="relative w-full max-w-[1400px] h-full">
+            <img
+              src="https://res.cloudinary.com/dmvlubzor/image/upload/v1763801588/WhoWeAre_o1uijj.jpg"
+              alt="Who We Are Background"
+              className="w-full h-full object-cover"
+            />
+            {/* Fade ONLY on the empty left side */}
+            <div className="absolute top-0 left-0 h-full w-[50px] bg-gradient-to-r from-gray-100 to-transparent pointer-events-none"></div>
+            {/* Optional soft fade on right for text integration */}
+            <div className="absolute top-0 right-0 h-full w-[220px] bg-gradient-to-l from-gray-100 via-gray-100/70 to-transparent pointer-events-none"></div>
+          </div>
         </div>
         <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-0 flex md:h-[400px] lg:h-[450px] items-center">
           <div className="flex flex-col items-center md:items-end justify-center md:justify-center bg-white/0 md:pr-8 w-full md:w-1/2 ml-auto">
@@ -226,7 +237,7 @@ const Home: React.FC = () => {
       {/* BECOME A MEMBER */}
       <section className="py-20 md:py-10 bg-white">
         <div className="max-w-4xl mx-auto text-center mb-16 px-4">
-            <h2 className="text-4xl font-extrabold text-gray-900 mb-4">Become a member</h2>
+            <h2 className="text-4xl font-extrabold text-gray-900 mb-4 mt-12">Become a member</h2>
             <p className="text-lg text-gray-600">Our goal is to help people connect with the communities within each discipline, and we have a plan to make that happen.</p>
         </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8">
