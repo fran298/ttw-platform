@@ -40,7 +40,7 @@ const ListingCard: React.FC<Props> = ({ listing }) => {
   };
 
   return (
-    <Link to={`/${String(listing.type).toLowerCase()}/${listing.id}`} className="group block bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-300">
+    <Link to={`/listing/${listing.id}`} className="group block bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-300">
       <div className="relative aspect-[4/3] overflow-hidden">
         <img 
           src={listing.images?.[0] || '/placeholder.jpg'} 
