@@ -13,7 +13,7 @@ class Country(models.Model):
 class City(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=150)
-    slug = models.SlugField()
+    slug = models.SlugField(max_length=150)
     latitude = models.FloatField()
     longitude = models.FloatField()
     country = models.ForeignKey(Country, on_delete=models.CASCADE, related_name="cities")
