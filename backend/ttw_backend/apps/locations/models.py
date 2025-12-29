@@ -25,4 +25,6 @@ class City(models.Model):
         ]
 
     def __str__(self):
-        return f"{self.name}, {self.country.code}"
+        if self.country:
+            return f"{self.name}, {self.country.code}"
+        return self.name
