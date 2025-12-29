@@ -21,7 +21,7 @@ import { getProviderChats, getChatRoom, getMessages, sendMessage, markMessagesAs
 import { Listing, Booking } from '../../types';
 import { StatCard } from './SharedComponents'; 
 
-const API_BASE_URL = "http://localhost:8000";
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 // 👇 YOUR CLOUD NAME
 const CLOUDINARY_CLOUD_NAME = "dmvlubzor"; 
 const PLACEHOLDER_COVER = "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80";

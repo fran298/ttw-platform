@@ -12,8 +12,10 @@ function addRefreshSubscriber(callback: (token: string) => void) {
   refreshSubscribers.push(callback);
 }
 
+const baseURL = process.env.REACT_APP_API_URL || "http://localhost:8000/api";
+
 const api = axios.create({
-  baseURL: "http://localhost:8000/api",
+  baseURL,
   headers: {
     "Content-Type": "application/json",
   },
@@ -50,7 +52,7 @@ api.interceptors.response.use(
 
           // ⬇️ YOUR CORRECT URL (NO CAMBIADA)
           const res = await axios.post(
-            "http://localhost:8000/api/auth/token/refresh/",
+            `${baseURL}/auth/token/refresh/`,
             { refresh: refreshToken }
           );
 

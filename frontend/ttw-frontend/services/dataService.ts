@@ -1,7 +1,9 @@
 import axios from "axios";
 
+const API_URL = import.meta.env.VITE_API_URL!;
+
 export const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "http://localhost:8000",
+  baseURL: API_URL,
   headers: {
     "Content-Type": "application/json",
   },
@@ -16,8 +18,6 @@ apiClient.interceptors.request.use((config) => {
 });
 
 import { Listing, Booking, ProviderProfile, ListingType, SportCategory, BookingStatus, GeoLocation } from "../types";
-
-const API_URL = import.meta.env.VITE_API_URL as string;
 
 // --- HELPER: AUTH HEADERS ---
 const getHeaders = () => {
