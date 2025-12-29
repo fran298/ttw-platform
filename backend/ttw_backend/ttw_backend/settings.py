@@ -185,7 +185,7 @@ STRIPE_PREMIUM_PRICE_ID = os.environ.get(
 # 50% OFF coupon for Premium Partner launch
 STRIPE_PREMIUM_50_COUPON_ID = os.environ.get(
     "STRIPE_PREMIUM_50_COUPON_ID",
-    "Xc6sfwHc"
+    "aYDPY1r0"
 )
 
 # --- FRONTEND URL (USED FOR STRIPE REDIRECTS) ---

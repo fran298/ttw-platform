@@ -91,7 +91,7 @@ function InstructorView() {
 
         try {
             const res = await fetch(
-                `${API_BASE_URL}/api/bookings/${finalizeBookingId}/finalize/`,
+                `${API_BASE_URL}/bookings/${finalizeBookingId}/finalize/`,
                 {
                     method: "POST",
                     headers: {
@@ -126,7 +126,7 @@ function InstructorView() {
     // --- Stripe Connect handler for Instructor ---
     const connectStripe = async () => {
         try {
-            const res = await fetch(`${API_BASE_URL}/api/payments/stripe/connect/`, {
+            const res = await fetch(`${API_BASE_URL}/payments/stripe/connect/`, {
                 method: "POST",
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("access")}`,
@@ -906,7 +906,7 @@ function ProviderView() {
 
         try {
             const res = await fetch(
-                `${API_BASE_URL}/api/bookings/${finalizeBookingId}/finalize/`,
+                `${API_BASE_URL}/bookings/${finalizeBookingId}/finalize/`,
                 {
                     method: "POST",
                     headers: {
@@ -1018,7 +1018,7 @@ function ProviderView() {
     // --- Stripe Connect handler ---
     const connectStripe = async () => {
         try {
-            const res = await fetch(`${API_BASE_URL}/api/payments/stripe/connect/`, {
+            const res = await fetch(`${API_BASE_URL}/payments/stripe/connect/`, {
                 method: "POST",
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("access")}`,
