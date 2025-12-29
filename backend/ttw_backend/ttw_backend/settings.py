@@ -183,9 +183,10 @@ STRIPE_PREMIUM_PRICE_ID = os.environ.get(
 )
 
 # 50% OFF coupon for Premium Partner launch
+# IMPORTANT: Coupon created via Stripe API (livemode)
 STRIPE_PREMIUM_50_COUPON_ID = os.environ.get(
     "STRIPE_PREMIUM_50_COUPON_ID",
-    "aYDPY1r0"
+    "13Vf4kMD"
 )
 
 # --- FRONTEND URL (USED FOR STRIPE REDIRECTS) ---
