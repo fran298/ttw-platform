@@ -169,25 +169,25 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 
 
-STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY", "sk_test_dummy_for_local")
-STRIPE_PUBLISHABLE_KEY = os.environ.get("STRIPE_PUBLISHABLE_KEY", "")
-STRIPE_WEBHOOK_SECRET = os.environ.get("STRIPE_WEBHOOK_SECRET", "")
+# --- STRIPE CONFIGURATION (STRICT: NO HARDCODED PROD DEFAULTS) ---
+STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY")
+STRIPE_PUBLISHABLE_KEY = os.environ.get("STRIPE_PUBLISHABLE_KEY")
+STRIPE_WEBHOOK_SECRET = os.environ.get("STRIPE_WEBHOOK_SECRET")
 
-# --- STRIPE PREMIUM PARTNER ---
-# Product: prod_TNuPM5pSpLW4KL (DO NOT use directly in Checkout)
-# Price: 499 EUR / year
-STRIPE_PREMIUM_PRICE_ID = os.environ.get(
-    "STRIPE_PREMIUM_PRICE_ID",
-    "price_1SjP06JkKt2Ek7A8xkj7c50t"
-    
-)
+STRIPE_PREMIUM_PRICE_ID = os.environ.get("STRIPE_PREMIUM_PRICE_ID")
+STRIPE_PREMIUM_50_COUPON_ID = os.environ.get("STRIPE_PREMIUM_50_COUPON_ID")
 
-# 50% OFF coupon for Premium Partner launch
-# IMPORTANT: Coupon created via Stripe API (livemode)
-STRIPE_PREMIUM_50_COUPON_ID = os.environ.get(
-    "STRIPE_PREMIUM_50_COUPON_ID",
-    "13Vf4kMD"
-)
+if not DEBUG:
+    missing = [
+        name for name, value in {
+            "STRIPE_SECRET_KEY": STRIPE_SECRET_KEY,
+            "STRIPE_PUBLISHABLE_KEY": STRIPE_PUBLISHABLE_KEY,
+            "STRIPE_PREMIUM_PRICE_ID": STRIPE_PREMIUM_PRICE_ID,
+            "STRIPE_PREMIUM_50_COUPON_ID": STRIPE_PREMIUM_50_COUPON_ID,
+        }.items() if not value
+    ]
+    if missing:
+        raise RuntimeError(f"Missing Stripe environment variables: {', '.join(missing)}")
 
 # --- FRONTEND URL (USED FOR STRIPE REDIRECTS) ---
 FRONTEND_URL = os.environ.get("FRONTEND_URL", "http://localhost:5173")
