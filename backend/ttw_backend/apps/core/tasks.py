@@ -40,16 +40,23 @@ def send_booking_email_task(
     # Inject booking object for templates
     context = {"booking": booking}
 
-    send_email(
-        to=to,
-        subject=subject,
-        template=template,
-        context=context,
-        from_email=from_email,
-    )
+    # Normalize recipients (Resend allows max 2, so send one by one)
+    if isinstance(to, str):
+        recipients = [to]
+    else:
+        recipients = list(to)
 
-    # Respect Resend rate limits
-    time.sleep(0.6)
+    for recipient in recipients:
+        send_email(
+            to=recipient,
+            subject=subject,
+            template=template,
+            context=context,
+            from_email=from_email,
+        )
+
+        # Respect Resend rate limits
+        time.sleep(0.6)
 
 
 

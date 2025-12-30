@@ -209,7 +209,7 @@ def _handle_checkout_session_completed(event):
                             activated = True
                             activated_target = "INSTRUCTOR"
             if activated:
-                send_booking_email_task.delay(
+                send_booking_email_task(
                     to=["partners@thetravelwild.com", "support@thetravelwild.com"],
                     subject="Premium Partner activated",
                     template="premium_partner_activated_admin",
@@ -220,7 +220,7 @@ def _handle_checkout_session_completed(event):
                     from_email=settings.BOOKINGS_EMAIL,
                 )
             else:
-                send_booking_email_task.delay(
+                send_booking_email_task(
                     to=["partners@thetravelwild.com", "support@thetravelwild.com"],
                     subject="New Premium Partner Purchase (Pending Signup)",
                     template="premium_partner_pending_admin",
@@ -261,9 +261,9 @@ def _handle_checkout_session_completed(event):
                 print(f"Booking {booking.id}: authorized emails already sent, skipping")
                 print(f"END _handle_checkout_session_completed, event_id={event['id']}")
                 return
-            # Enqueue booking authorized emails (Celery)
+            # Enqueue booking authorized emails (synchronous)
             if booking.user and booking.user.email:
-                send_booking_email_task.delay(
+                send_booking_email_task(
                     to=[booking.user.email],
                     subject="Your booking is authorized – The Travel Wild",
                     template="booking_authorized_user",
@@ -276,7 +276,7 @@ def _handle_checkout_session_completed(event):
             provider_email = getattr(merchant_user, "email", None)
 
             if provider_email:
-                send_booking_email_task.delay(
+                send_booking_email_task(
                     to=[provider_email],
                     subject="New booking authorized – The Travel Wild",
                     template="booking_authorized_provider",
@@ -284,7 +284,7 @@ def _handle_checkout_session_completed(event):
                     from_email=settings.BOOKINGS_EMAIL,
                 )
 
-            send_booking_email_task.delay(
+            send_booking_email_task(
                 to=[settings.SUPPORT_EMAIL],
                 subject="New booking authorized – Internal notification",
                 template="booking_authorized_admin",
@@ -395,11 +395,11 @@ def stripe_main_webhook(request):
         return HttpResponse(status=400)
     if event['type'] == 'checkout.session.completed':
         _handle_checkout_session_completed(event)
-    if event['type'] == 'invoice.payment_succeeded':
+    elif event['type'] == 'invoice.payment_succeeded':
         _handle_invoice_payment_succeeded(event)
-    if event["type"] == "payment_intent.succeeded":
+    elif event["type"] == "payment_intent.succeeded":
         _handle_payment_intent_succeeded(event)
-    if event["type"] == "payment_intent.canceled":
+    elif event["type"] == "payment_intent.canceled":
         _handle_payment_intent_canceled(event)
     return HttpResponse(status=200)
 
