@@ -317,7 +317,7 @@ function InstructorView() {
             }
 
             if (bookingView === 'COMPLETED') {
-                return ['COMPLETED', 'CANCELLED'].includes(status);
+                return ['COMPLETED', 'CANCELLED', 'PAID'].includes(status);
             }
 
             return false;
@@ -395,11 +395,9 @@ function InstructorView() {
                             Platform fee
                           </p>
                           <p className="text-sm text-blue-700 mt-1">
-                            The Travel Wild retains a <strong>{profile.commission_rate}%</strong> service fee on each completed booking.
-                            This covers payments processing, customer support, insurance, and platform maintenance.
-                          </p>
-                          <p className="text-xs text-blue-600 mt-2">
-                            Payouts are released automatically via Stripe after an activity is finalized.
+                            A <strong>{profile.commission_rate}%</strong> platform commission is applied only after an activity is finalized.<br />
+                            The payout shown before finalization is an estimate.<br />
+                            Final amounts become payable once the booking is completed and reviewed.
                           </p>
                         </div>
                         <div className="flex flex-col md:flex-row justify-between items-end mb-8">
@@ -451,6 +449,30 @@ function InstructorView() {
                                                 <div className="font-bold text-gray-900">{b.listingTitle}</div>
                                                 <div className="text-sm text-gray-500">{new Date(b.date).toLocaleDateString()} • {b.guests} guests</div>
                                                 <div className="text-sm text-gray-500">Client: {b.customerName}</div>
+                                                {b.status?.toUpperCase() === 'AUTHORIZED' && (
+                                                  <div className="text-xs text-gray-600">
+                                                    Estimated payout:{" "}
+                                                    <strong>
+                                                      {b.estimated_provider_amount?.toFixed?.(2) ?? '--'} {b.currency || 'EUR'}
+                                                    </strong>
+                                                  </div>
+                                                )}
+                                                {b.status?.toUpperCase() === 'COMPLETED' && (
+                                                  <div className="text-xs text-blue-700 font-bold">
+                                                    Pending payout (finalized):{" "}
+                                                    {b.provider_amount?.toFixed?.(2) ?? '--'} {b.currency || 'EUR'}
+                                                  </div>
+                                                )}
+                                                {b.status?.toUpperCase() === 'PAID' && (
+                                                  <div className="text-xs text-green-700 font-bold">
+                                                    Paid: {b.provider_amount?.toFixed?.(2) ?? '--'} {b.currency || 'EUR'}
+                                                  </div>
+                                                )}
+                                                {b.status?.toUpperCase() === 'CANCELLED' && (
+                                                  <div className="text-xs text-red-500">
+                                                    Booking cancelled
+                                                  </div>
+                                                )}
                                             </div>
                                             <span className="text-xs font-bold px-2 py-1 rounded bg-blue-50 text-blue-700">{b.status}</span>
                                             {b.status?.toUpperCase() === 'AUTHORIZED' && stripeConnected && (
@@ -1119,7 +1141,7 @@ function ProviderView() {
             }
 
             if (bookingView === 'COMPLETED') {
-                return ['COMPLETED', 'CANCELLED'].includes(status);
+                return ['COMPLETED', 'CANCELLED', 'PAID'].includes(status);
             }
 
             return false;
@@ -1195,13 +1217,9 @@ function ProviderView() {
                             Platform fee
                           </p>
                           <p className="text-sm text-blue-700 mt-1">
-                            The Travel Wild retains a <strong>
-                              {providerProfile.commission_rate}%
-                            </strong> service fee on each completed booking.
-                            This covers payments processing, customer support, insurance, and platform maintenance.
-                          </p>
-                          <p className="text-xs text-blue-600 mt-2">
-                            Payouts are released automatically via Stripe after an activity is finalized.
+                            A <strong>{providerProfile.commission_rate}%</strong> platform commission is applied only after an activity is finalized.<br />
+                            The payout shown before finalization is an estimate.<br />
+                            Final amounts become payable once the booking is completed and reviewed.
                           </p>
                         </div>
                         )}
@@ -1254,6 +1272,30 @@ function ProviderView() {
                                                 <div className="font-bold text-gray-900">{b.listingTitle}</div>
                                                 <div className="text-sm text-gray-500">{new Date(b.date).toLocaleDateString()} • {b.guests} guests</div>
                                                 <div className="text-sm text-gray-500">Client: {b.customerName}</div>
+                                                {b.status?.toUpperCase() === 'AUTHORIZED' && (
+                                                  <div className="text-xs text-gray-600">
+                                                    Estimated payout:{" "}
+                                                    <strong>
+                                                      {b.estimated_provider_amount?.toFixed?.(2) ?? '--'} {b.currency || 'EUR'}
+                                                    </strong>
+                                                  </div>
+                                                )}
+                                                {b.status?.toUpperCase() === 'COMPLETED' && (
+                                                  <div className="text-xs text-blue-700 font-bold">
+                                                    Pending payout (finalized):{" "}
+                                                    {b.provider_amount?.toFixed?.(2) ?? '--'} {b.currency || 'EUR'}
+                                                  </div>
+                                                )}
+                                                {b.status?.toUpperCase() === 'PAID' && (
+                                                  <div className="text-xs text-green-700 font-bold">
+                                                    Paid: {b.provider_amount?.toFixed?.(2) ?? '--'} {b.currency || 'EUR'}
+                                                  </div>
+                                                )}
+                                                {b.status?.toUpperCase() === 'CANCELLED' && (
+                                                  <div className="text-xs text-red-500">
+                                                    Booking cancelled
+                                                  </div>
+                                                )}
                                             </div>
                                             <span className="text-xs font-bold px-2 py-1 rounded bg-blue-50 text-blue-700">{b.status}</span>
                                             {b.status?.toUpperCase() === 'AUTHORIZED' && stripeConnected && (
