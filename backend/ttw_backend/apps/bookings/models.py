@@ -8,12 +8,9 @@ from django.utils import timezone
 class Booking(models.Model):
     
     class Status(models.TextChoices):
-        PENDING = 'PENDING', 'Pending Payment'
-        AUTHORIZED = 'AUTHORIZED', 'Payment Authorized'
-        PAID = 'PAID', 'Payment Captured'
-        CONFIRMED = 'CONFIRMED', 'Confirmed'
-        CANCELLED = 'CANCELLED', 'Cancelled'
-        COMPLETED = 'COMPLETED', 'Completed'
+        AUTHORIZED = "AUTHORIZED", "Payment Authorized"
+        COMPLETED = "COMPLETED", "Completed"
+        CANCELLED = "CANCELLED", "Cancelled"
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
@@ -145,7 +142,7 @@ class Booking(models.Model):
     status = models.CharField(
         max_length=20, 
         choices=Status.choices, 
-        default=Status.PENDING
+        default=Status.AUTHORIZED
     )
 
     # Data Snapshot (Crucial for History/Invoices if listing changes later)

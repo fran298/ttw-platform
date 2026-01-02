@@ -1,3 +1,9 @@
+#
+# Booking lifecycle (simplified):
+# AUTHORIZED -> COMPLETED (manual finalize by provider/instructor)
+# AUTHORIZED -> CANCELLED
+# Stripe events NEVER finalize a booking automatically.
+
 import stripe
 import time
 from decimal import Decimal  # 👈 NUEVO
@@ -303,9 +309,9 @@ def _handle_payment_intent_succeeded(event):
         except Booking.DoesNotExist:
             print(f"END _handle_payment_intent_succeeded, event_id={event['id']}")
             return
-        booking.status = Booking.Status.PAID
-        booking.paid_at = timezone.now()
-        booking.save(update_fields=["status", "paid_at"])
+        # Payment succeeded does NOT finalize the booking.
+        # Finalization is manual by provider/instructor.
+        booking.save()
         Transaction.objects.filter(
             booking=booking,
             stripe_id=intent["id"],
@@ -327,7 +333,7 @@ def _handle_payment_intent_canceled(event):
         except Booking.DoesNotExist:
             print(f"END _handle_payment_intent_canceled, event_id={event['id']}")
             return
-        booking.status = Booking.Status.CANCELED
+        booking.status = Booking.Status.CANCELLED
         booking.save(update_fields=["status"])
         Transaction.objects.filter(
             booking=booking,

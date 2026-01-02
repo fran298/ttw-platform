@@ -311,12 +311,15 @@ function InstructorView() {
     const upcomingBookings = bookings
         .filter(b => {
             const status = (b.status || '').toUpperCase();
+
             if (bookingView === 'UPCOMING') {
-                return ['PENDING', 'CONFIRMED', 'AUTHORIZED'].includes(status);
+                return status === 'AUTHORIZED';
             }
+
             if (bookingView === 'COMPLETED') {
-                return ['COMPLETED', 'PAYMENT_CAPTURED', 'CANCELLED'].includes(status);
+                return ['COMPLETED', 'CANCELLED'].includes(status);
             }
+
             return false;
         })
         .sort(
@@ -1110,12 +1113,15 @@ function ProviderView() {
     const upcomingBookings = bookings
         .filter(b => {
             const status = (b.status || '').toUpperCase();
+
             if (bookingView === 'UPCOMING') {
-                return ['PENDING', 'CONFIRMED', 'AUTHORIZED'].includes(status);
+                return status === 'AUTHORIZED';
             }
+
             if (bookingView === 'COMPLETED') {
-                return ['COMPLETED', 'PAYMENT_CAPTURED', 'CANCELLED'].includes(status);
+                return ['COMPLETED', 'CANCELLED'].includes(status);
             }
+
             return false;
         })
         .sort(

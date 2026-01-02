@@ -71,7 +71,7 @@ class BookingViewSet(viewsets.ModelViewSet):
             user=request.user,
             total_price=total_price,
             currency=listing.currency,
-            status=Booking.Status.PENDING,
+            status=Booking.Status.AUTHORIZED,
         )
         print('🔥 BOOKING SAVED:', booking.id)
 
@@ -147,18 +147,6 @@ class BookingViewSet(viewsets.ModelViewSet):
         booking.save()
         return Response({"status": "cancelled", "id": booking.id})
 
-    @action(detail=True, methods=['post'])
-    def approve(self, request, pk=None):
-        """ Allow Provider to confirm a booking """
-        booking = self.get_object()
-        
-        # FIX: Check against listing.owner, not merchant.user
-        if booking.listing.owner != request.user:
-            return Response({"detail": "Not authorized"}, status=status.HTTP_403_FORBIDDEN)
-
-        booking.status = Booking.Status.CONFIRMED
-        booking.save()
-        return Response({"status": "confirmed"})
 
     @action(detail=True, methods=["post"])
     def finalize(self, request, pk=None):

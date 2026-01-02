@@ -52,7 +52,7 @@ class CreateCheckoutSessionView(views.APIView):
             start_date=start_date,
             guests=guests,
             total_price=listing.price * guests,
-            status=Booking.Status.PENDING
+            status=Booking.Status.AUTHORIZED
         )
         booking_id = booking.id
 
@@ -191,6 +191,12 @@ class ProviderPayoutsView(views.APIView):
         }, status=200)
 
 
+#
+# PAYMENT CAPTURE RULE:
+# - Stripe authorization happens at checkout → AUTHORIZED
+# - Provider/Instructor manually finalizes → COMPLETED
+# - ONLY AFTER COMPLETED an admin/system captures the payment
+#
 # --- CAPTURE AND PAYOUT ENDPOINT ---
 class CaptureAndPayoutBookingView(views.APIView):
     """
@@ -281,10 +287,10 @@ class CaptureAndPayoutBookingView(views.APIView):
                 payout.paid_at = timezone.now()
                 payout.save(update_fields=["stripe_transfer_id", "status", "paid_at"])
 
-                # --- UPDATE BOOKING ---
-                booking.status = Booking.Status.PAID
+                # Capture happens AFTER provider/instructor finalized the activity.
+                # Status remains COMPLETED; capture does not change lifecycle state.
                 booking.paid_at = timezone.now()
-                booking.save(update_fields=["status", "paid_at"])
+                booking.save(update_fields=["paid_at"])
 
                 # --- TRANSACTION LOG ---
                 Transaction.objects.create(
