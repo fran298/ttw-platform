@@ -5,6 +5,7 @@ import time
 from django.conf import settings
 from apps.providers.models import ProviderProfile
 from apps.instructors.models import InstructorProfile
+from django.utils import timezone
 
 
 
@@ -58,6 +59,128 @@ def send_booking_email_task(
         # Respect Resend rate limits
         time.sleep(0.6)
 
+
+@shared_task(
+    bind=True,
+    autoretry_for=(Exception,),
+    retry_backoff=30,
+    retry_kwargs={"max_retries": 5},
+)
+def send_booking_authorized_user_email(self, booking_id: str):
+    booking = Booking.objects.get(id=booking_id)
+
+    if booking.authorized_user_email_sent_at:
+        return
+
+    if not booking.user or not booking.user.email:
+        return
+
+    send_email(
+        to=booking.user.email,
+        subject="Your booking is authorized – The Travel Wild",
+        template="booking_authorized_user",
+        context={"booking": booking},
+        from_email=settings.BOOKINGS_EMAIL,
+    )
+
+    booking.authorized_user_email_sent_at = timezone.now()
+    booking.save(update_fields=["authorized_user_email_sent_at"])
+
+
+@shared_task(
+    bind=True,
+    autoretry_for=(Exception,),
+    retry_backoff=30,
+    retry_kwargs={"max_retries": 5},
+)
+def send_booking_authorized_provider_email(self, booking_id: str):
+    booking = Booking.objects.get(id=booking_id)
+
+    if booking.authorized_provider_email_sent_at:
+        return
+
+    merchant = getattr(booking.listing, "merchant", None)
+    merchant_user = getattr(merchant, "user", None) if merchant else None
+    provider_email = getattr(merchant_user, "email", None)
+
+    if not provider_email:
+        return
+
+    send_email(
+        to=provider_email,
+        subject="New booking authorized – The Travel Wild",
+        template="booking_authorized_provider",
+        context={"booking": booking},
+        from_email=settings.BOOKINGS_EMAIL,
+    )
+
+    booking.authorized_provider_email_sent_at = timezone.now()
+    booking.save(update_fields=["authorized_provider_email_sent_at"])
+
+
+@shared_task(
+    bind=True,
+    autoretry_for=(Exception,),
+    retry_backoff=30,
+    retry_kwargs={"max_retries": 5},
+)
+def send_booking_authorized_admin_email(self, booking_id: str):
+    booking = Booking.objects.get(id=booking_id)
+
+    if booking.authorized_admin_email_sent_at:
+        return
+
+    support_email = getattr(settings, "SUPPORT_EMAIL", None)
+    if not support_email:
+        return
+
+    send_email(
+        to=support_email,
+        subject="New booking authorized – Internal notification",
+        template="booking_authorized_admin",
+        context={"booking": booking},
+        from_email=settings.BOOKINGS_EMAIL,
+    )
+
+    booking.authorized_admin_email_sent_at = timezone.now()
+    booking.save(update_fields=["authorized_admin_email_sent_at"])
+
+
+@shared_task(
+    bind=True,
+    autoretry_for=(Exception,),
+    retry_backoff=30,
+    retry_kwargs={"max_retries": 5},
+)
+def send_premium_partner_activated_admin_email(self, premium_intent_id: str, activated_target: str):
+    send_email(
+        to=["partners@thetravelwild.com", "support@thetravelwild.com"],
+        subject="Premium Partner activated",
+        template="premium_partner_activated_admin",
+        context={
+            "premium_intent_id": premium_intent_id,
+            "activated_target": activated_target,
+        },
+        from_email=settings.BOOKINGS_EMAIL,
+    )
+
+
+@shared_task(
+    bind=True,
+    autoretry_for=(Exception,),
+    retry_backoff=30,
+    retry_kwargs={"max_retries": 5},
+)
+def send_premium_partner_pending_admin_email(self, premium_intent_id: str):
+    send_email(
+        to=["partners@thetravelwild.com", "support@thetravelwild.com"],
+        subject="New Premium Partner Purchase (Pending Signup)",
+        template="premium_partner_pending_admin",
+        context={
+            "premium_intent_id": premium_intent_id,
+        },
+        from_email=settings.BOOKINGS_EMAIL,
+    )
 
 
 @shared_task(

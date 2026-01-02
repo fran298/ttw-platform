@@ -117,10 +117,22 @@ class Booking(models.Model):
     payment_authorized_at = models.DateTimeField(null=True, blank=True)
 
     # Email idempotency
-    authorized_emails_sent_at = models.DateTimeField(
+    authorized_user_email_sent_at = models.DateTimeField(
         null=True,
         blank=True,
-        help_text="When booking authorized emails were enqueued/sent"
+        help_text="When booking authorized email was sent to the user"
+    )
+
+    authorized_provider_email_sent_at = models.DateTimeField(
+        null=True,
+        blank=True,
+        help_text="When booking authorized email was sent to the provider"
+    )
+
+    authorized_admin_email_sent_at = models.DateTimeField(
+        null=True,
+        blank=True,
+        help_text="When booking authorized email was sent to admin/support"
     )
 
     final_emails_sent_at = models.DateTimeField(

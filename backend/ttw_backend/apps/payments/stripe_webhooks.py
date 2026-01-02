@@ -5,7 +5,13 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 
-from apps.core.tasks import send_booking_email_task
+from apps.core.tasks import (
+    send_booking_authorized_user_email,
+    send_booking_authorized_provider_email,
+    send_booking_authorized_admin_email,
+    send_premium_partner_activated_admin_email,
+    send_premium_partner_pending_admin_email,
+)
 from django.contrib.auth import get_user_model
 from apps.bookings.models import Booking
 from .models import Transaction, MerchantPayout, PremiumSignupIntent
@@ -209,25 +215,13 @@ def _handle_checkout_session_completed(event):
                             activated = True
                             activated_target = "INSTRUCTOR"
             if activated:
-                send_booking_email_task(
-                    to=["partners@thetravelwild.com", "support@thetravelwild.com"],
-                    subject="Premium Partner activated",
-                    template="premium_partner_activated_admin",
-                    context={
-                        "premium_intent_id": str(premium_intent.id),
-                        "activated_target": activated_target,
-                    },
-                    from_email=settings.BOOKINGS_EMAIL,
+                send_premium_partner_activated_admin_email.delay(
+                    str(premium_intent.id),
+                    activated_target,
                 )
             else:
-                send_booking_email_task(
-                    to=["partners@thetravelwild.com", "support@thetravelwild.com"],
-                    subject="New Premium Partner Purchase (Pending Signup)",
-                    template="premium_partner_pending_admin",
-                    context={
-                        "premium_intent_id": str(premium_intent.id),
-                    },
-                    from_email=settings.BOOKINGS_EMAIL,
+                send_premium_partner_pending_admin_email.delay(
+                    str(premium_intent.id)
                 )
             print(f"END _handle_checkout_session_completed, event_id={event['id']}")
             return
@@ -256,44 +250,9 @@ def _handle_checkout_session_completed(event):
                 f"Booking {booking_id} AUTHORIZED — Amount Authorized: {booking.total_price} {booking.currency} "
                 f"| TTW Fee: {booking.service_fee} | Estimated Payout: {booking.provider_payout}"
             )
-            # --- EMAIL IDEMPOTENCY GUARD ---
-            if booking.authorized_emails_sent_at:
-                print(f"Booking {booking.id}: authorized emails already sent, skipping")
-                print(f"END _handle_checkout_session_completed, event_id={event['id']}")
-                return
-            # Enqueue booking authorized emails (synchronous)
-            if booking.user and booking.user.email:
-                send_booking_email_task(
-                    to=[booking.user.email],
-                    subject="Your booking is authorized – The Travel Wild",
-                    template="booking_authorized_user",
-                    context={"booking_id": str(booking.id)},
-                    from_email=settings.BOOKINGS_EMAIL,
-                )
-
-            merchant = getattr(booking.listing, "merchant", None)
-            merchant_user = getattr(merchant, "user", None) if merchant else None
-            provider_email = getattr(merchant_user, "email", None)
-
-            if provider_email:
-                send_booking_email_task(
-                    to=[provider_email],
-                    subject="New booking authorized – The Travel Wild",
-                    template="booking_authorized_provider",
-                    context={"booking_id": str(booking.id)},
-                    from_email=settings.BOOKINGS_EMAIL,
-                )
-
-            send_booking_email_task(
-                to=[settings.SUPPORT_EMAIL],
-                subject="New booking authorized – Internal notification",
-                template="booking_authorized_admin",
-                context={"booking_id": str(booking.id)},
-                from_email=settings.BOOKINGS_EMAIL,
-            )
-            # Set idempotency marker after all emails, before chat room creation
-            booking.authorized_emails_sent_at = timezone.now()
-            booking.save(update_fields=["authorized_emails_sent_at"])
+            send_booking_authorized_user_email.delay(booking.id)
+            send_booking_authorized_provider_email.delay(booking.id)
+            send_booking_authorized_admin_email.delay(booking.id)
             if ChatRoom is not None:
                 chat, created = ChatRoom.objects.get_or_create(booking=booking)
                 if created:
