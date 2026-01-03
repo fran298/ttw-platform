@@ -52,6 +52,23 @@ class Booking(models.Model):
         default=0, validators=[MinValueValidator(0)]
     )
 
+    # Estimated financials (before finalization)
+    estimated_platform_fee = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        help_text="Estimated platform fee before finalization"
+    )
+
+    estimated_provider_amount = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        help_text="Estimated provider payout before finalization"
+    )
+
     # Final financials (after completion / capture)
     amount_captured = models.DecimalField(
         max_digits=10,
@@ -232,6 +249,34 @@ class Booking(models.Model):
         # 2) CALCULAR FINANZAS SI ES NUEVO BOOKING
         # ----------------------------------------------------
         # Removed initial commission calculation block as per instructions
+
+        # ----------------------------------------------------
+        # 2.5) ESTIMATED FINANCIALS (AUTHORIZED ONLY)
+        # ----------------------------------------------------
+        if (
+            self.status == Booking.Status.AUTHORIZED
+            and self.estimated_provider_amount is None
+            and self.total_price
+        ):
+            from decimal import Decimal, ROUND_HALF_UP
+
+            commission_rate = Decimal("0.25")
+            owner = self.listing.owner
+
+            if hasattr(owner, "provider_profile") and owner.provider_profile.is_subscribed:
+                commission_rate = Decimal("0.15")
+            elif hasattr(owner, "instructor_profile") and owner.instructor_profile.is_subscribed:
+                commission_rate = Decimal("0.15")
+
+            estimated_fee = (Decimal(self.total_price) * commission_rate).quantize(
+                Decimal("0.01"), rounding=ROUND_HALF_UP
+            )
+            estimated_payout = (Decimal(self.total_price) - estimated_fee).quantize(
+                Decimal("0.01"), rounding=ROUND_HALF_UP
+            )
+
+            self.estimated_platform_fee = estimated_fee
+            self.estimated_provider_amount = estimated_payout
 
         # ----------------------------------------------------
         # 3) LIFECYCLE TIMESTAMPS

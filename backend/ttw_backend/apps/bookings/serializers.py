@@ -29,6 +29,15 @@ class BookingSerializer(serializers.ModelSerializer):
             'provider_name', 'instructor_name',
             'city_name',
             'country_name',
+            'estimated_platform_fee',
+            'estimated_provider_amount',
+            'adjusted_total_price',
+            'platform_fee',
+            'provider_amount',
+            'completion_percentage',
+            'paid_at',
+            'service_fee',
+            'provider_payout',
         ]
         read_only_fields = ['total_price', 'service_fee', 'provider_payout', 'status']
 
@@ -97,7 +106,13 @@ class AdminBookingSerializer(serializers.ModelSerializer):
             "listing_title",
             "status",
             "total_price",
+            "estimated_platform_fee",
+            "estimated_provider_amount",
+            "adjusted_total_price",
+            "platform_fee",
+            "provider_amount",
+            "paid_at",
+            "created_at",
             "service_fee",
             "provider_payout",
-            "created_at",
         ]
