@@ -71,6 +71,17 @@ function InstructorView() {
     const [totalPaid, setTotalPaid] = useState(0);
     const [totalPending, setTotalPending] = useState(0);
 
+    // Map payouts by booking_id for quick lookup
+    const payoutByBookingId = React.useMemo(() => {
+      const map: Record<string, any> = {};
+      payouts.forEach((p: any) => {
+        if (p.booking_id) {
+          map[p.booking_id] = p;
+        }
+      });
+      return map;
+    }, [payouts]);
+
     // Messaging
     const [chatRooms, setChatRooms] = useState<any[]>([]);
     const [messages, setMessages] = useState<any[]>([]);
@@ -478,7 +489,9 @@ function InstructorView() {
                                                 {b.status?.toUpperCase() === 'COMPLETED' && (
                                                   <div className="text-xs text-blue-700 font-bold">
                                                     Pending payout (finalized):{" "}
-                                                    {b.provider_amount?.toFixed?.(2) ?? '--'} {b.currency || 'EUR'}
+                                                    {payoutByBookingId[b.id]?.amount_due
+                                                      ? Number(payoutByBookingId[b.id].amount_due).toFixed(2)
+                                                      : '--'} {payoutByBookingId[b.id]?.currency || b.currency || 'EUR'}
                                                   </div>
                                                 )}
                                                 {b.status?.toUpperCase() === 'PAID' && (
@@ -899,6 +912,17 @@ function ProviderView() {
     const [payouts, setPayouts] = useState([]);
     const [totalPaid, setTotalPaid] = useState(0);
     const [totalPending, setTotalPending] = useState(0);
+
+    // Map payouts by booking_id for quick lookup
+    const payoutByBookingId = React.useMemo(() => {
+      const map: Record<string, any> = {};
+      payouts.forEach((p: any) => {
+        if (p.booking_id) {
+          map[p.booking_id] = p;
+        }
+      });
+      return map;
+    }, [payouts]);
     const [chatRooms, setChatRooms] = useState<any[]>([]);
     const [messages, setMessages] = useState<any[]>([]);
     const [activeChatId, setActiveChatId] = useState<string | null>(null);
@@ -1319,7 +1343,9 @@ function ProviderView() {
                                                 {b.status?.toUpperCase() === 'COMPLETED' && (
                                                   <div className="text-xs text-blue-700 font-bold">
                                                     Pending payout (finalized):{" "}
-                                                    {b.provider_amount?.toFixed?.(2) ?? '--'} {b.currency || 'EUR'}
+                                                    {payoutByBookingId[b.id]?.amount_due
+                                                      ? Number(payoutByBookingId[b.id].amount_due).toFixed(2)
+                                                      : '--'} {payoutByBookingId[b.id]?.currency || b.currency || 'EUR'}
                                                   </div>
                                                 )}
                                                 {b.status?.toUpperCase() === 'PAID' && (
