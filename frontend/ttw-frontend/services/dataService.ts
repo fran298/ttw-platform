@@ -907,9 +907,10 @@ export const getProviderPayouts = async () => {
         ? data.payouts.map((p: any) => ({
             id: p.id,
             bookingId: p.booking_id,
-            listingTitle: p.booking_title || "",
-            amount: parseFloat(p.amount_to_pay),
-            currency: "EUR",
+            listingTitle: p.listing_title || p.booking_title || "",
+            amount: parseFloat(p.amount_due),          // FIX: correct backend field
+            platformFee: parseFloat(p.platform_fee),   // FIX: expose platform fee
+            currency: p.currency || "EUR",
             status: p.status,
             createdAt: p.created_at,
             paidAt: p.paid_at
