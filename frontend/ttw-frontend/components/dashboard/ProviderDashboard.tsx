@@ -76,7 +76,7 @@ function InstructorView() {
       const map: Record<string, any> = {};
       payouts.forEach((p: any) => {
         if (p.booking_id) {
-          map[p.booking_id] = p;
+          map[String(p.booking_id)] = p;
         }
       });
       return map;
@@ -489,9 +489,9 @@ function InstructorView() {
                                                 {b.status?.toUpperCase() === 'COMPLETED' && (
                                                   <div className="text-xs text-blue-700 font-bold">
                                                     Pending payout (finalized):{" "}
-                                                    {payoutByBookingId[b.id]?.amount_due
-                                                      ? Number(payoutByBookingId[b.id].amount_due).toFixed(2)
-                                                      : '--'} {payoutByBookingId[b.id]?.currency || b.currency || 'EUR'}
+                                                    {payoutByBookingId[String(b.id)]?.amount_due
+                                                      ? Number(payoutByBookingId[String(b.id)].amount_due).toFixed(2)
+                                                      : '--'} {payoutByBookingId[String(b.id)]?.currency || b.currency || 'EUR'}
                                                   </div>
                                                 )}
                                                 {b.status?.toUpperCase() === 'PAID' && (
@@ -918,7 +918,7 @@ function ProviderView() {
       const map: Record<string, any> = {};
       payouts.forEach((p: any) => {
         if (p.booking_id) {
-          map[p.booking_id] = p;
+          map[String(p.booking_id)] = p;
         }
       });
       return map;
@@ -1343,9 +1343,9 @@ function ProviderView() {
                                                 {b.status?.toUpperCase() === 'COMPLETED' && (
                                                   <div className="text-xs text-blue-700 font-bold">
                                                     Pending payout (finalized):{" "}
-                                                    {payoutByBookingId[b.id]?.amount_due
-                                                      ? Number(payoutByBookingId[b.id].amount_due).toFixed(2)
-                                                      : '--'} {payoutByBookingId[b.id]?.currency || b.currency || 'EUR'}
+                                                    {payoutByBookingId[String(b.id)]?.amount_due
+                                                      ? Number(payoutByBookingId[String(b.id)].amount_due).toFixed(2)
+                                                      : '--'} {payoutByBookingId[String(b.id)]?.currency || b.currency || 'EUR'}
                                                   </div>
                                                 )}
                                                 {b.status?.toUpperCase() === 'PAID' && (
