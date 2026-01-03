@@ -179,10 +179,28 @@ function InstructorView() {
             // 1. Fetch Bookings
             try {
                 const b = await getProviderBookings(providerId);
-                setBookings(b.map(x => ({
+                setBookings(
+                  b.map((x: any) => ({
                     ...x,
-                    customerName: x.userName || x.userEmail || "Customer"
-                })));
+                    customerName: x.userName || x.userEmail || "Customer",
+                    estimated_provider_amount:
+                      x.estimated_provider_amount !== null && x.estimated_provider_amount !== undefined
+                        ? Number(x.estimated_provider_amount)
+                        : null,
+                    estimated_platform_fee:
+                      x.estimated_platform_fee !== null && x.estimated_platform_fee !== undefined
+                        ? Number(x.estimated_platform_fee)
+                        : null,
+                    provider_amount:
+                      x.provider_amount !== null && x.provider_amount !== undefined
+                        ? Number(x.provider_amount)
+                        : null,
+                    platform_fee:
+                      x.platform_fee !== null && x.platform_fee !== undefined
+                        ? Number(x.platform_fee)
+                        : null,
+                  }))
+                );
             } catch (e) { console.error("Bookings load error", e); }
 
             // 2. Fetch Listings
@@ -999,10 +1017,28 @@ function ProviderView() {
             // 1. Fetch Bookings
             try {
                 const b = await getProviderBookings(providerId);
-                setBookings(b.map(x => ({
+                setBookings(
+                  b.map((x: any) => ({
                     ...x,
-                    customerName: x.userName || x.userEmail || "Customer"
-                })));
+                    customerName: x.userName || x.userEmail || "Customer",
+                    estimated_provider_amount:
+                      x.estimated_provider_amount !== null && x.estimated_provider_amount !== undefined
+                        ? Number(x.estimated_provider_amount)
+                        : null,
+                    estimated_platform_fee:
+                      x.estimated_platform_fee !== null && x.estimated_platform_fee !== undefined
+                        ? Number(x.estimated_platform_fee)
+                        : null,
+                    provider_amount:
+                      x.provider_amount !== null && x.provider_amount !== undefined
+                        ? Number(x.provider_amount)
+                        : null,
+                    platform_fee:
+                      x.platform_fee !== null && x.platform_fee !== undefined
+                        ? Number(x.platform_fee)
+                        : null,
+                  }))
+                );
             } catch (e) { console.error("Bookings load error", e); }
             // 2. Fetch Listings
             try {
