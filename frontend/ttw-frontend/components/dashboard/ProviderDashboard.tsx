@@ -486,24 +486,34 @@ function InstructorView() {
                                                     </strong>
                                                   </div>
                                                 )}
-                                                {b.status?.toUpperCase() === 'COMPLETED' && (
-                                                  <div className="text-xs text-blue-700 font-bold">
-                                                    Pending payout (finalized):{" "}
-                                                    {payoutByBookingId[String(b.id)]?.amount_due
-                                                      ? Number(payoutByBookingId[String(b.id)].amount_due).toFixed(2)
-                                                      : '--'} {payoutByBookingId[String(b.id)]?.currency || b.currency || 'EUR'}
-                                                  </div>
-                                                )}
-                                                {b.status?.toUpperCase() === 'PAID' && (
-                                                  <div className="text-xs text-green-700 font-bold">
-                                                    Paid: {b.provider_amount?.toFixed?.(2) ?? '--'} {b.currency || 'EUR'}
-                                                  </div>
-                                                )}
-                                                {b.status?.toUpperCase() === 'CANCELLED' && (
-                                                  <div className="text-xs text-red-500">
-                                                    Booking cancelled
-                                                  </div>
-                                                )}
+                                                {(() => {
+                                                  const payout = payoutByBookingId[String(b.id)];
+
+                                                  if (payout) {
+                                                    const amount = Number(payout.amount_due).toFixed(2);
+                                                    const currency = payout.currency || b.currency || 'EUR';
+
+                                                    if (payout.status === 'PAID') {
+                                                      return (
+                                                        <div className="text-xs text-green-700 font-bold">
+                                                          Paid: {amount} {currency}
+                                                        </div>
+                                                      );
+                                                    }
+
+                                                    return (
+                                                      <div className="text-xs text-blue-700 font-bold">
+                                                        Pending payout: {amount} {currency}
+                                                      </div>
+                                                    );
+                                                  }
+
+                                                  return (
+                                                    <div className="text-xs text-gray-400">
+                                                      Payout not generated yet
+                                                    </div>
+                                                  );
+                                                })()}
                                             </div>
                                             <span className="text-xs font-bold px-2 py-1 rounded bg-blue-50 text-blue-700">{b.status}</span>
                                             {b.status?.toUpperCase() === 'AUTHORIZED' && stripeConnected && (
@@ -1340,24 +1350,34 @@ function ProviderView() {
                                                     </strong>
                                                   </div>
                                                 )}
-                                                {b.status?.toUpperCase() === 'COMPLETED' && (
-                                                  <div className="text-xs text-blue-700 font-bold">
-                                                    Pending payout (finalized):{" "}
-                                                    {payoutByBookingId[String(b.id)]?.amount_due
-                                                      ? Number(payoutByBookingId[String(b.id)].amount_due).toFixed(2)
-                                                      : '--'} {payoutByBookingId[String(b.id)]?.currency || b.currency || 'EUR'}
-                                                  </div>
-                                                )}
-                                                {b.status?.toUpperCase() === 'PAID' && (
-                                                  <div className="text-xs text-green-700 font-bold">
-                                                    Paid: {b.provider_amount?.toFixed?.(2) ?? '--'} {b.currency || 'EUR'}
-                                                  </div>
-                                                )}
-                                                {b.status?.toUpperCase() === 'CANCELLED' && (
-                                                  <div className="text-xs text-red-500">
-                                                    Booking cancelled
-                                                  </div>
-                                                )}
+                                                {(() => {
+                                                  const payout = payoutByBookingId[String(b.id)];
+
+                                                  if (payout) {
+                                                    const amount = Number(payout.amount_due).toFixed(2);
+                                                    const currency = payout.currency || b.currency || 'EUR';
+
+                                                    if (payout.status === 'PAID') {
+                                                      return (
+                                                        <div className="text-xs text-green-700 font-bold">
+                                                          Paid: {amount} {currency}
+                                                        </div>
+                                                      );
+                                                    }
+
+                                                    return (
+                                                      <div className="text-xs text-blue-700 font-bold">
+                                                        Pending payout: {amount} {currency}
+                                                      </div>
+                                                    );
+                                                  }
+
+                                                  return (
+                                                    <div className="text-xs text-gray-400">
+                                                      Payout not generated yet
+                                                    </div>
+                                                  );
+                                                })()}
                                             </div>
                                             <span className="text-xs font-bold px-2 py-1 rounded bg-blue-50 text-blue-700">{b.status}</span>
                                             {b.status?.toUpperCase() === 'AUTHORIZED' && stripeConnected && (
