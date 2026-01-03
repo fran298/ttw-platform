@@ -75,8 +75,13 @@ function InstructorView() {
     const payoutByBookingId = React.useMemo(() => {
       const map: Record<string, any> = {};
       payouts.forEach((p: any) => {
-        if (p.booking_id) {
-          map[String(p.booking_id)] = p;
+        const bookingId =
+          p.booking_id ||
+          p.booking?.id ||
+          p.booking;
+
+        if (bookingId) {
+          map[String(bookingId)] = p;
         }
       });
       return map;
@@ -927,8 +932,13 @@ function ProviderView() {
     const payoutByBookingId = React.useMemo(() => {
       const map: Record<string, any> = {};
       payouts.forEach((p: any) => {
-        if (p.booking_id) {
-          map[String(p.booking_id)] = p;
+        const bookingId =
+          p.booking_id ||
+          p.booking?.id ||
+          p.booking;
+
+        if (bookingId) {
+          map[String(bookingId)] = p;
         }
       });
       return map;
