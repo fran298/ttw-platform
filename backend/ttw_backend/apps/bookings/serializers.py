@@ -45,17 +45,19 @@ class BookingSerializer(serializers.ModelSerializer):
         return obj.start_date < timezone.now().date()
 
     def get_provider_name(self, obj):
-        provider = getattr(obj.listing, "provider", None)
-        if provider and getattr(provider, "company_name", None):
-            return provider.company_name
-        if provider and getattr(provider, "name", None):
-            return provider.name
-        return None
+        owner = getattr(obj.listing, "owner", None)
+        if not owner:
+            return None
+
+        if hasattr(owner, "provider_profile") and getattr(owner.provider_profile, "company_name", None):
+            return owner.provider_profile.company_name
+
+        return owner.email
 
     def get_instructor_name(self, obj):
-        instructor = getattr(obj.listing, "instructor", None)
-        if instructor and getattr(instructor, "name", None):
-            return instructor.name
+        owner = getattr(obj.listing, "owner", None)
+        if owner and owner.role == "INSTRUCTOR":
+            return owner.email
         return None
 
     def get_city_name(self, obj):

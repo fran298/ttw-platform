@@ -73,6 +73,8 @@ class BookingViewSet(viewsets.ModelViewSet):
             currency=listing.currency,
             status=Booking.Status.AUTHORIZED,
         )
+        # Ensure estimated financials are persisted on creation (AUTHORIZED)
+        booking.save()
         print('🔥 BOOKING SAVED:', booking.id)
 
         # =============================
@@ -84,7 +86,7 @@ class BookingViewSet(viewsets.ModelViewSet):
             print('📧 EMAIL SENT -> USER')
             send_email(
                 to=[booking.user.email],
-                subject='Booking request received – The Travel Wild',
+                subject='Booking received – The Travel Wild',
                 template='booking_created_user',
                 context={
                     'booking': booking,

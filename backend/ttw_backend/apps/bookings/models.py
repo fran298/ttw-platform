@@ -221,7 +221,6 @@ class Booking(models.Model):
         self.provider_payout = provider_amount
 
     def save(self, *args, **kwargs):
-        print("🔥 BOOKING SAVE EJECUTADO:", self.id)
         listing = self.listing
 
         # ----------------------------------------------------
@@ -256,7 +255,8 @@ class Booking(models.Model):
         if (
             self.status == Booking.Status.AUTHORIZED
             and self.estimated_provider_amount is None
-            and self.total_price
+            and self.estimated_platform_fee is None
+            and self.total_price is not None
         ):
             from decimal import Decimal, ROUND_HALF_UP
 
@@ -290,7 +290,10 @@ class Booking(models.Model):
         # ----------------------------------------------------
         # 4) FINAL FINANCIAL CALCULATION (ENFORCED)
         # ----------------------------------------------------
-        if self.completion_percentage is not None:
+        if self.completion_percentage is not None and self.status in (
+            Booking.Status.COMPLETED,
+            Booking.Status.CANCELLED,
+        ):
             self.calculate_final_financials()
 
         super().save(*args, **kwargs)
