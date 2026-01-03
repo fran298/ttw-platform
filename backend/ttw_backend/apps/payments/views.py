@@ -1,4 +1,6 @@
 import stripe
+from django.contrib.contenttypes.models import ContentType
+from apps.providers.models import MerchantProfile
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import views, status, permissions, viewsets
@@ -246,10 +248,12 @@ class CaptureAndPayoutBookingView(views.APIView):
                 )
 
                 # --- CREATE MERCHANT PAYOUT RECORD ---
+                merchant = booking.listing.owner.merchant_profile
+
                 payout = MerchantPayout.objects.create(
                     booking=booking,
-                    merchant_content_type=None,
-                    merchant_object_id=None,
+                    merchant_content_type=ContentType.objects.get_for_model(MerchantProfile),
+                    merchant_object_id=merchant.id,
                     amount_due=booking.provider_payout,
                     currency=booking.currency,
                     status=MerchantPayout.Status.PENDING,
